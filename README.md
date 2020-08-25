@@ -1,5 +1,6 @@
 
-
+# TCP Over ICMP
+Using these client and server scripts, one could tunnel TCP over ICMP using raw sockets.
 
 ## Examples
 

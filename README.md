@@ -4,39 +4,42 @@ Using these client and server scripts, one could tunnel TCP over ICMP using raw 
 
 # Installation
 This python project is built with native python libraries, no special installation are needed.
+Although this project can be run locally, one would rather use `docker` and `docker-compose` in order to simulate a separate client and tunnel servers.
+
+## How to run
+
+```bash
+# The template for running the tunnel server and the client is as follows:
+
+# HOST_TO_TUNNEL is the host we would like the client to reach. We are specifying this so that we could pass that to the `client.py` script.
+TARGET={HOST_TO_TUNNEL} docker-compose up
+
+# We are telling the client (through the docker container) to send a GET request to the HOST_TO_TUNNEL with URI.
+docker-compose exec client curl https://127.0.0.1:8000/{URI} --header 'Host: {HOST_TO_TUNNEL}'  --insecure
+```
 
 ## Examples
+```bash 
+# Spawning a server and a client:
+TARGET=ynet.co.il docker-compose up
 
-```bash
-# Terminal 1 - Spawn a server:
-sudo python server.py
+# Sending a GET request to ynet through the tunnel!
+docker-compose exec client curl https://127.0.0.1:8000/home/0,7340,L-8,00.html --header 'Host: www.ynet.co.il'  --insecure
+```
 
-# Terminal 2 - Spawn a client:
-sudo python client.py --tunnel-host 192.168.1.15 --listen-port 8000 --target-host ynet.co.il --target-port 443
+```bash 
+# Spawning a server and a client:
+TARGET=stackoverflow.com docker-compose up
 
-# Terminal 3 - Send a get request:
-curl https://127.0.0.1:8000/home/0,7340,L-8,00.html --header "Host: www.ynet.co.il"  --insecure
+# Sending a GET request to stackoverflow through the tunnel!
+docker-compose exec client curl https://127.0.0.1:8000/index.html --header 'Host: www.stackoverflow.com'  --insecure
 ```
 
 
-```bash
-# Terminal 1 - Spawn a server:
-sudo python server.py
+```bash 
+# Spawning a server and a client:
+TARGET=google.com docker-compose up
 
-# Terminal 2 - Spawn a client:
-sudo python client.py --tunnel-host 192.168.1.15 --listen-port 8000 --target-host stackoverflow.com --target-port 443
-
-# Terminal 3 - Send a get request:
-curl https://127.0.0.1:8000/index.html --header "Host: stackoverflow.com"  --insecure
-```
-
-```bash
-# Terminal 1 - Spawn a server:
-sudo python server.py
-
-# Terminal 2 - Spawn a client:
-sudo python client.py --tunnel-host 192.168.1.15 --listen-port 8000 --target-host www.google.com --target-port 80
-
-# Terminal 3 - Send a get request:
-curl http://127.0.0.1:8000/ --header "Host: www.google.com"
+# Sending a GET request to stackoverflow through the tunnel!
+docker-compose exec client curl https://127.0.0.1:8000/index.html --header 'Host: www.google.com'  --insecure
 ```

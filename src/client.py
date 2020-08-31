@@ -119,13 +119,13 @@ class Client:
     A client class which handles the session threads
     """
     def __init__(self, tunnel_server, local_port, dest_host, dest_port):
+        logger.info(f"Starting client. Tunnel Host: {tunnel_server}, Target Host: {dest_host}:{dest_port}...")
         self.tunnel_server = tunnel_server
         dest_host = socket.gethostbyname(dest_host)
         self.dest = (dest_host, dest_port)
         self.tcp_server_socket = create_tcp_server_socket(local_port)
 
     def run(self):
-        logger.info("Starting client...")
         while True:
             self.tcp_server_socket.listen(5)
             sock, _ = self.tcp_server_socket.accept()

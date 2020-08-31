@@ -1,0 +1,13 @@
+version: '3'
+services:
+    client:
+        build: .
+        command: python client.py --tunnel-host tunnel --listen-port 8000 --target-host ynet.co.il --target-port 443
+        sysctls:
+            - net.ipv4.icmp_echo_ignore_all=1
+
+    tunnel:
+        build: .
+        command: python tunnel_server.py
+        sysctls:
+            - net.ipv4.icmp_echo_ignore_all=1

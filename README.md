@@ -2,6 +2,9 @@
 # TCP Over ICMP
 Using these client and server scripts, one could tunnel TCP over ICMP using raw sockets.
 
+# Installation
+This python project is built with native python libraries, no special installation are needed.
+
 ## Examples
 
 ```bash

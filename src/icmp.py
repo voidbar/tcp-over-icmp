@@ -5,11 +5,10 @@ ICMP_ECHO_REPLY = 0
 ICMP_ECHO_REQUEST = 8
 
 class ICMPPacket(object):
-    def __init__(self, icmp_type, icmp_code, id,
-                 sequence, data, source_ip, dest=(None, None)):
+    def __init__(self, icmp_type, icmp_code, data, source_ip, dest=(None, None)):
         self.type, self.code = icmp_type, icmp_code
         self.checksum = None
-        self.id, self.sequence, self.data = id, sequence, data
+        self.data = data
         self.dest = dest
         self.source_ip = source_ip
         self.length = len(self.data)
@@ -17,7 +16,7 @@ class ICMPPacket(object):
     def build_raw_icmp(self):
         pack_str = "!BBHHH4sH"
         print(self.dest[0])
-        pack_args = [self.type, self.code, 0, self.id, self.sequence,
+        pack_args = [self.type, self.code, 0, 0, 0,
                      socket.inet_aton(self.dest[0]), self.dest[1]]
         if self.length:
             pack_str += "{}s".format(self.length)
@@ -45,10 +44,10 @@ def parse_tcp_packet(packet):
         icmp_data_str = f"{packet_len}s"
         data = struct.unpack(icmp_data_str, icmp_packet[icmp_pack_len:])[0]
     
-    _type, code, checksum, id, sequence, dest_ip, \
+    _type, code, checksum, _, _, dest_ip, \
         dest_port = struct.unpack(icmp_pack_str, icmp_packet[:icmp_pack_len])
     
-    packet = ICMPPacket(_type, code, id, sequence, data,
+    packet = ICMPPacket(_type, code, data,
                 socket.inet_ntoa(source_ip),
                 (socket.inet_ntoa(dest_ip), dest_port))
     packet.checksum = checksum

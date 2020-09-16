@@ -89,7 +89,7 @@ class Tunnel(object):
             sdata = sock.recv(TCP_BUFFER_SIZE)
         except OSError:
             return
-        new_packet = icmp.ICMPPacket(icmp.ICMP_ECHO_REPLY, 0, 0, 0,
+        new_packet = icmp.ICMPPacket(icmp.ICMP_ECHO_REPLY, 0,
                                      sdata, self.source, self.dest)
         packet = new_packet.build_raw_icmp()
         self.icmp_send_socket.sendto(packet, (self.source, 0))

@@ -86,7 +86,7 @@ class ClientSessionThread(threading.Thread):
         Forwarding the TCP packets received from the client server to the tunnel server. 
         Wraping the TCP in ICMP during the procedure.
         """
-        logger.debug("Receiving TCP packets from the client. Wraping them in ICMP and forwarding to the tunnel server client")
+        logger.debug("Receiving TCP packets from the client. Wraping them in ICMP and forwarding to the tunnel server")
         try:
             sdata = sock.recv(TCP_BUFFER_SIZE)
         except socket.error:
@@ -97,7 +97,7 @@ class ClientSessionThread(threading.Thread):
         len_sdata = len(sdata)
         code = 0 if len_sdata > 0 else 1
         new_packet = icmp.ICMPPacket(
-            icmp.ICMP_ECHO_REQUEST, code, 0, 0,
+            icmp.ICMP_ECHO_REQUEST, code,
             sdata, self.tcp_socket.getsockname(), self.dest)
         packet = new_packet.build_raw_icmp()
         self.icmp_socket.sendto(packet, (self.tunnel_server, 1))

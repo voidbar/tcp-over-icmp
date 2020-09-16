@@ -6,6 +6,9 @@ ICMP_ECHO_REQUEST = 8
 
 class ICMPPacket(object):
     def __init__(self, icmp_type, icmp_code, data, source_ip, dest=(None, None)):
+        """
+        This function only support Echo Request and Echo Reply type
+        """
         self.type, self.code = icmp_type, icmp_code
         self.checksum = None
         self.data = data
@@ -55,6 +58,10 @@ def parse_tcp_packet(packet):
 
 
 def icmp_checksum(packet):
+    """
+    A checksum function that receives a raw ICMP packet, with zero in the checksum position,
+    and calculates its checksum using the algorithm described at RFC1071: https://tools.ietf.org/html/rfc1071 
+    """
     csum = 0
     countTo = (len(packet) / 2) * 2
     count = 0

@@ -2,7 +2,7 @@ version: '3'
 services:
     client:
         build: .
-        command: python client.py --tunnel-host tunnel --listen-port 8000 --target-host ${TARGET} --target-port 443
+        command: python client.py --tunnel-host tunnel --listen-port 8000 --target-host ${TARGET} --target-port ${PORT}
         sysctls:
             - net.ipv4.icmp_echo_ignore_all=1
 

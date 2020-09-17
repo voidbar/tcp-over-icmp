@@ -31,17 +31,46 @@ Result:
 TARGET=stackoverflow.com PORT=443 docker-compose up
 
 # Then, request the site using the client host:
-docker-compose exec client curl https://127.0.0.1:8000/index.html --header 'Host: www.stackoverflow.com'  --insecure
+docker-compose exec client curl https://127.0.0.1:8000/ --header 'Host: www.stackoverflow.com'  --insecure
 ```
 
 Result: 
 ``` html
 <!DOCTYPE html>
-    <html class="html__responsive">
+    <html class="html__responsive html__unpinned-leftnav">
     <head>
-        <title>Page not found - Stack Overflow</title>
-        <link rel="shortcut icon" href="https://cdn.sstatic.net/Sites/stackoverflow/Img/favicon.ico?v=ec617d715196">
-        <link rel="apple-touch-icon" href="https://cdn.sstatic.net/Sites/stackoverflow/Img/apple-touch-icon.png?v=c78bd457575a">
+        <title>Stack Overflow - Where Developers Learn, Share, &amp; Build Careers</title>
 ...
 ..
 ```
+
+## Dispatching an HTTPS Request to Invalid URI
+
+```bash
+# Load up the tunnel and the client:
+TARGET=stackoverflow.com PORT=443 docker-compose up
+
+# Then, request the site using the client host:
+docker-compose exec client curl https://127.0.0.1:8000/not/valid/URI --header 'Host: www.stackoverflow.com'  --insecure
+```
+
+Result: 
+``` html
+<!DOCTYPE html>
+
+    <html class="html__responsive">
+    <head>
+        <title>Page not found - Stack Overflow</title>
+...
+..
+```
+
+# Dispatching an HTTPS Request to Invalid Port
+```bash
+# Load up the tunnel and the client:
+TARGET=stackoverflow.com PORT=1234 docker-compose up
+
+# Then, request the site using the client host:
+docker-compose exec client curl https://127.0.0.1:8000
+```
+The server tries to establish connection with `stackoverflow.com` at port `1234`, will hang until it will reach the its time limit.

@@ -96,9 +96,7 @@ class ClientSessionThread(threading.Thread):
         # if no data the socket may be closed/timeout/EOF
         len_sdata = len(sdata)
         code = 0 if len_sdata > 0 else 1
-        new_packet = icmp.ICMPPacket(
-            icmp.ICMP_ECHO_REQUEST, code,
-            sdata, self.tcp_socket.getsockname(), self.dest)
+        new_packet = icmp.ICMPPacket(icmp.ICMP_ECHO_REQUEST, code, sdata, self.dest)
         packet = new_packet.build_raw_icmp()
         self.icmp_socket.sendto(packet, (self.tunnel_server, 1))
         if code == 1:

@@ -41,7 +41,7 @@ class Tunnel(object):
     @staticmethod
     def create_tcp_socket(dest):
         """
-        Creating a socket for listening for sending TCP packets to the target
+        Creating a socket for sending TCP packets to the target
         """
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -90,7 +90,7 @@ class Tunnel(object):
         except OSError:
             return
         new_packet = icmp.ICMPPacket(icmp.ICMP_ECHO_REPLY, 0,
-                                     sdata, self.source, self.dest)
+                                     sdata, self.dest)
         packet = new_packet.build_raw_icmp()
         self.icmp_send_socket.sendto(packet, (self.source, 0))
 

@@ -5,7 +5,7 @@ ICMP_ECHO_REPLY = 0
 ICMP_ECHO_REQUEST = 8
 
 class ICMPPacket(object):
-    def __init__(self, icmp_type, icmp_code, data, source_ip, dest=(None, None)):
+    def __init__(self, icmp_type, icmp_code, data, dest=(None, None)):
         """
         This function only support Echo Request and Echo Reply type
         """
@@ -13,7 +13,6 @@ class ICMPPacket(object):
         self.checksum = None
         self.data = data
         self.dest = dest
-        self.source_ip = source_ip
         self.length = len(self.data)
 
     def build_raw_icmp(self):
@@ -35,11 +34,8 @@ def parse_tcp_packet(packet):
     icmp_pack_str = "!BBHHH4sH"
     data = b""
 
-    ip_packet, icmp_packet = packet[:20], packet[20:] # split ip header
+    icmp_packet = packet[20:] # Exctracting only the ICMP buffer
 
-    ip_packet = struct.unpack(ip_pack_str, ip_packet)
-
-    source_ip = ip_packet[8]
     icmp_pack_len = struct.calcsize(icmp_pack_str)
     packet_len = len(icmp_packet) - icmp_pack_len
 
@@ -51,7 +47,6 @@ def parse_tcp_packet(packet):
         dest_port = struct.unpack(icmp_pack_str, icmp_packet[:icmp_pack_len])
     
     packet = ICMPPacket(_type, code, data,
-                socket.inet_ntoa(source_ip),
                 (socket.inet_ntoa(dest_ip), dest_port))
     packet.checksum = checksum
     return packet

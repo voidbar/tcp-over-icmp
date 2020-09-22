@@ -5,6 +5,9 @@ ICMP_ECHO_REPLY = 0
 ICMP_ECHO_REQUEST = 8
 
 class ICMPPacket(object):
+    """
+    An class representing a ICMP packet that fits our proposes.
+    """
     def __init__(self, icmp_type, icmp_code, data, dest=(None, None)):
         """
         This function only support Echo Request and Echo Reply type
@@ -16,8 +19,10 @@ class ICMPPacket(object):
         self.length = len(self.data)
 
     def build_raw_icmp(self):
+        """
+        Create a raw icmp packet byte buffer out of the current ICMP object
+        """
         pack_str = "!BBHHH4sH"
-        print(self.dest[0])
         pack_args = [self.type, self.code, 0, 0, 0,
                      socket.inet_aton(self.dest[0]), self.dest[1]]
         if self.length:
@@ -29,8 +34,10 @@ class ICMPPacket(object):
         return struct.pack(pack_str, *pack_args)
 
     
-def parse_tcp_packet(packet):
-    ip_pack_str = "BBHHHBBH4s4s"
+def parse_icmp_buffer(packet):
+    """
+    Given a raw ICMP packet byte buffer, create an ICMPPacket object
+    """
     icmp_pack_str = "!BBHHH4sH"
     data = b""
 

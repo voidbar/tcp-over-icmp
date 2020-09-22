@@ -14,6 +14,9 @@ TCP_BUFFER_SIZE = 2 ** 10
 ICMP_BUFFER_SIZE = 65565
 
 class Tunnel(object):
+    """
+    A Tunnel Server class used to handle commincation with the target server and the client
+    """
     def __init__(self):
         self.tcp_socket = None
         self.icmp_server_socket = self.create_icmp_server_socket()
@@ -56,7 +59,7 @@ class Tunnel(object):
 
         packet, addr = self.icmp_server_socket.recvfrom(ICMP_BUFFER_SIZE)
         try:
-            packet = icmp.parse_tcp_packet(packet)
+            packet = icmp.parse_icmp_buffer(packet)
         except ValueError:
             return
         if packet.type == icmp.ICMP_ECHO_REPLY and packet.code == 0:

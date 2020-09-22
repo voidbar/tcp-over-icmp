@@ -70,7 +70,7 @@ class ClientSessionThread(threading.Thread):
         """
         logger.debug("Receiving ICMP packets from the tunnel server. Unwraping ICMP and forwarding TCP to the client")
         sdata = sock.recvfrom(ICMP_BUFFER_SIZE)
-        packet = icmp.parse_tcp_packet(sdata[0])
+        packet = icmp.parse_icmp_buffer(sdata[0])
         if packet.type == icmp.ICMP_ECHO_REQUEST:
             # Not our packet
             return
@@ -124,6 +124,9 @@ class Client:
         self.tcp_server_socket = create_tcp_server_socket(local_port)
 
     def run(self):
+        """
+        The main program loop of the client
+        """
         while True:
             self.tcp_server_socket.listen(5)
             sock, _ = self.tcp_server_socket.accept()
